@@ -1,33 +1,35 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import InfoHoteles from "../components/InfoHoteles";
 import ModalHotel from "../components/ModalHotel";
 
-const Hoteles = ({ mensaje }) => {
+const Hoteles = ({ mensaje, token }) => {
   const [modal, setModal] = useState(false);
   const [hotelSeleccionado, setHotelSeleccionado] = useState({});
-  const hoteles = [
-    {
-      id: 1,
-      nombre: "Hotel 1",
-      imagen: "imagen1",
-      descripcion: "Esta es un hotel nuevo",
-    },
-    {
-      id: 2,
-      nombre: "Hotel 2",
-      imagen: "imagen2",
-      descripcion: "Esta es un hotel viejo",
-    },
-    {
-      id: 3,
-      nombre: "Hotel 3",
-      imagen: "imagen3",
-      descripcion: "Esta es un hotel usado",
-    },
-  ];
+  const [hoteles, setHoteles] = useState([]);
+
+  useEffect(() => {
+    const obtenerHoteles = async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const respuesta = await axios(
+        "https://desarrollo.api.noktos.com/api/admin/hosts/50",
+        config
+      );
+
+      setHoteles(respuesta.data.host);
+    };
+
+    obtenerHoteles();
+  }, []);
 
   return (
-    <div className="grid">
+    <div className={`${modal ? "bg-gray-400" : ""} grid`}>
       <h1 className="text-center text-7xl text-indigo-600 font-bold my-10">
         Hoteles
       </h1>
@@ -38,31 +40,28 @@ const Hoteles = ({ mensaje }) => {
       <table className="w-10/12 mx-auto text-center">
         <thead className="border-b-2 border-gray-500">
           <tr>
-            <td>Nombre</td>
-            <td>Imagen</td>
-            <td>Descripcion</td>
-            <td>Acciones</td>
+            <td className="w-1/5">Nombre</td>
+            <td className="w-1/5">Imagen</td>
+            <td className="w-1/5">Dirección</td>
+            <td className="w-1/5">Amenidades</td>
+            <td className="w-1/5">Acciones</td>
           </tr>
         </thead>
         <tbody>
-          {hoteles.map((hotel) => (
-            <>
-              <InfoHoteles
-                key={hotel.id}
-                hotel={hotel}
-                setModal={setModal}
-                setHotelSeleccionado={setHotelSeleccionado}
-              />
-              {modal && (
-                <ModalHotel
-                  hotelSeleccionado={hotelSeleccionado}
-                  setModal={setModal}
-                />
-              )}
-            </>
+          {hoteles?.map((hotel) => (
+            <InfoHoteles
+              key={hotel.id}
+              hotel={hotel}
+              setModal={setModal}
+              setHotelSeleccionado={setHotelSeleccionado}
+            ></InfoHoteles>
           ))}
         </tbody>
       </table>
+
+      {modal && (
+        <ModalHotel hotelSeleccionado={hotelSeleccionado} setModal={setModal} />
+      )}
     </div>
   );
 };

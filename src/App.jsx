@@ -7,7 +7,7 @@ function App() {
   const [mensaje, setMensaje] = useState("");
 
   if (token !== "") {
-    return <Hoteles mensaje={mensaje} />;
+    return <Hoteles mensaje={mensaje} token={token} />;
   }
 
   return (
