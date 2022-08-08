@@ -6,6 +6,8 @@ function App() {
   const [token, setToken] = useState("");
   const [mensaje, setMensaje] = useState("");
 
+  console.log("Esto es una prueba para git");
+
   if (token !== "") {
     return <Hoteles mensaje={mensaje} token={token} />;
   }
