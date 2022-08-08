@@ -14,6 +14,7 @@ function App() {
   console.log("Esto es una prueba para git 123456789");
 
   console.log("Esto es una prueba para git 123456789");
+  console.log("Esto esta originalmente en pruebauno");
 
   if (token !== "") {
     return <Hoteles mensaje={mensaje} token={token} />;
